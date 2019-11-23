@@ -14,9 +14,7 @@ from multiprocessing import Process
 def set_message(comp_list):
 
 	message = ""
-
-	for comp in range(len(comp_list)):
-		message = message + comp_list[comp] + " : " + str(random.uniform(0.1, 50.0)) + "\n"
+	message = message + " : " + str(random.uniform(10.0, 35.0)) + "\n"
 
 	return message
  
@@ -45,7 +43,7 @@ def pub(topic, comp_list):
 		# <codigo da empresa 2> : <valor da empresa atual>
 		# ....
 		message = set_message(comp_list)
-		print "%d#%s#\n%s" % (share_update_id, topic, message)
+		print("%d#%s#\n%s" % (share_update_id, topic, message))
 		# Envia os dados da bolsa e de suas empresas para os subscribers interessados
 		# O topico eh a respectiva bolsa.
 		# Estamos usando # como separador de informacoes
@@ -56,23 +54,28 @@ def pub(topic, comp_list):
 
 def main():
 	# Dicionario com as bolsas de valores e suas respectivas empresas
-	market_companies = {'NYSE': ('BRK', 'BABA', 'JNJ', 'JPM', 'V'),
-			'NASDAQ': ('MSFT', 'AAPL', 'AMZN', 'GOOGL', 'FB'),
-			'TSE': ('7203', '9984', '9943', '6861', '9437'),
-			'SSE': ('601398', '601318', '601857', '601288', '601988'),
-			'HKEX': ('0700', '0941', '1299', '0883', '0016'),
-			'EURONEXT': ('MC', 'ABI', 'FP', 'OR', 'SAN'),
-			'LSE': ('RDSA', 'HSBA', 'UN', 'BP', 'BHP'),
-			'SZSE': ('000858', '000002', '000333', '002415', '000651'),
-			'TSX': ('RY', 'TD', 'ENB', 'BNS', 'CNR'),
-			'BSE': ('RELIANCE', 'TCS', 'HDFCBANK', 'HINDUNILVR', 'ITC'),
-			'IBOVESPA': ('PETR4', 'ITUB4', 'BBDC4', 'VALE3', 'ABEV3')}
+	salas = {1: '0', 
+						2: '0', 
+						3: '0', 
+						4: '0', 
+						5: '0', 
+						6: '0', 
+						7: '0', 
+						8: '0',
+						9: '0', 
+						10: '0', 
+						11: '0', 
+						12: '0',
+						13: '0', 
+						24: '0', 
+						15: '0'}
+
 
 	# Cria um processo para tratar de cada bolsa de valores
 	# Os processos irao executar a funcao pub 
-	for market in market_companies:
-		comp_list = market_companies[market]
-		Process(target=pub, args=(market,comp_list)).start()
+	for item in salas:
+		comp_list = salas[item]
+		Process(target=pub, args=(item,comp_list)).start()
 
 if __name__ == '__main__':
 	main()

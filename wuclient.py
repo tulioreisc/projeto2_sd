@@ -1,7 +1,3 @@
-# Autores
-# Leonardo Utida Alcantara     RA: 628182
-# Tulio Reis Carvalho    RA: 628050
-
 #
 #   Weather update client
 #   Connects SUB socket to tcp://localhost:5556

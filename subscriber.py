@@ -33,7 +33,7 @@ def sub(topicfilter):
 		log_id = log_id + 1
 	log_file = open('sub_log_' + str(log_id) + '.txt', 'a')
 
-	# Procedimento principal do cliente
+	# Procedimento principal do cliente (quem vai monitorar)
 	while True:
 		# Recebe os valores do publisher escolhido
 	    string = socket.recv()
@@ -57,21 +57,25 @@ def sub(topicfilter):
 def main():
 
 	# Menu inicial
-	print("Opcao    Bolsa")
-	print('NYSE     New York Stock Exchange')
-	print('NASDAQ   NASDAQ Stock Marquet')
-	print('TSE      Tokyo Stock Exchange')
-	print('SSE      Shangai Stock Exchange')
-	print('HKEX     Hong Kong Stock Exchange')
-	print('EURONEXT EURONEXT Stock Market')
-	print('LSE      London Stock Exchange')
-	print('SZSE     Shenzhen Stock Exchange')
-	print('TSX      Toronto Stock Exchange')
-	print('BSE      Bombay Stock Exchnage')
-	print('IBOVESPA Indice Bovespa')
-
+	print("Opcao    Sala")
+	print('1		LE1')
+	print('2		LE2')
+	print('3		LE3')
+	print('4		LE4')
+	print('5		LE5')
+	print('6		LE6')
+	print('7		PPGCC1')
+	print('8		PPGCC2')
+	print('9		PPGCC3')
+	print('10		PPGCC4')
+	print('11		Auditorio')
+	print('12		Almoxarifado')
+	print('13		Sala de Banco de dados')
+	print('14		Secretaria')
+	print('15		Sala de reuniao')
+	
 	# Selecao de topico
-	topicfilter = raw_input("Escolha a bolsa de valores que deseja monitorar: ")
+	topicfilter = input("Escolha a sala que deseja monitorar a temperatura: ")
 
 	# Inicia um processo para o subscriber
 	process = Process(target=sub, args=(topicfilter,))
