@@ -1,6 +1,6 @@
-# Alunos:
-# Tiago Bachiega de Almeida     RA:628247
-# Victor Tavares    RA:618042
+# Autores
+# Leonardo Utida Alcantara     RA: 628182
+# Tulio Reis Carvalho    RA: 628050
 import sys
 import zmq
 from multiprocessing import Process

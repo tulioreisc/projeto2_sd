@@ -1,3 +1,7 @@
+# Autores
+# Leonardo Utida Alcantara     RA: 628182
+# Tulio Reis Carvalho    RA: 628050
+
 #
 #   Weather update server
 #   Binds PUB socket to tcp://*:5556
