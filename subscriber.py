@@ -23,7 +23,9 @@ def sub(topicfilter):
 	port = "5560"
 	context = zmq.Context()
 	socket = context.socket(zmq.SUB)
-	socket.connect ("tcp://localhost:%s" % port)
+	#socket.connect ("tcp://localhost:%s" % port)
+	socket.connect ("tcp://192.168.1.111:%s" % port)
+	#socket.connect('tcp://192.168.1.111:4507;127.0.0.1:4506')
 	socket.setsockopt(zmq.SUBSCRIBE, topicfilter)
 	
 	# Cria o o log dos valores lidos da acao. Para cada cliente sera gerado um 
