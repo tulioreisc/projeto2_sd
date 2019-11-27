@@ -1,81 +1,104 @@
 # Autores
 # Leonardo Utida Alcantara     RA: 628182
 # Tulio Reis Carvalho    RA: 628050
+
+#Para rodar o codigo eh necessario utilizar python 2
+
 import sys
 import zmq
 from multiprocessing import Process
 import os
+import datetime
 import time
+from statistics import mean 
+import json
+import pickle
 
-# Funcao do subscriber. Cada subscriber eh um cliente
-# que gostaria de monitorar determinada bolsa de valores.
-# A bolsa escolhida eh o topico do subscriber, passado como
-# argumento em topicfilter
+# Funcao do subscriber. 
+# Cada subscriber eh um cliente que gostaria de monitorar uma temperatura
+# de sala de aula. A sala eh escolhida utilizando o parametro topicfilter
 def sub(topicfilter):
 
-	# Conecta com os publishers atraves do proxy
+	# Conecta com os publishers com o proxy
 	port = "5560"
 	context = zmq.Context()
 	socket = context.socket(zmq.SUB)
 	socket.connect ("tcp://localhost:%s" % port)
 	socket.setsockopt(zmq.SUBSCRIBE, topicfilter)
-
-	# Este procedimetno eh usado para criar o log dos valores lidos da acao.
-	# Para cada cliente sera gerado um arquivo de log com os valores das acoes
-	# que ele leu acompanhado dos IDs desta remessa de valores.
-	# Usaremos estes arquivos para compara se, para todos os IDs iguais entre os
-	# clientes, os valores das acoes eh o mesmo, verificando se a sincronizacao
-	# do sistema esta garantida.
-	# Aqui, estamos apenas criando um arquivo diferente para cada cliente. O arquivo
-	# tera um nome no formado <sub_log_<numero do arquivo - ordem de entrada do cliente>.txt"
+	
+	# Cria o o log dos valores lidos da acao. Para cada cliente sera gerado um 
+	# arquivo de log com os valores de temperatura de sala que ele leu acompanhado dos 
+	# IDs destes valores.
+	# Usaremos estes arquivos para comparar se para todos os IDs iguais entre os
+	# clientes, as temperaturas sao iguais, verificando se a sincronizacao esta garantida.
 	log_id = 0
 	while(os.path.exists('sub_log_' + str(log_id) + '.txt') is True):
 		log_id = log_id + 1
 	log_file = open('sub_log_' + str(log_id) + '.txt', 'a')
 
-	# Procedimento principal do cliente (quem vai monitorar)
+
+	cont = 0
+	meanTemp = []
 	while True:
 		# Recebe os valores do publisher escolhido
-	    string = socket.recv()
-	    # Obtem cada informacao realizando o split com o separador #
-	    topic, share_update_id, messagedata = string.split("#")
+		msg = socket.recv()
+		msg = msg.split(':',1)[1]
+		print(msg)
+		json_data = json.loads(msg)
 
-	    # Mostra as informacoes na tela e as escreve no log
-	    print("Share Market: " + str(topic))
-	    file.write(log_file, "Share Market: " + str(topic) + "\n")
-	    print("Share Update ID: " + str(share_update_id))
-	    file.write(log_file, "Share Update ID: " + str(share_update_id) + "\n")
-	    print("Companies:")
-	    file.write(log_file, "Companies:")
-	    print(messagedata)
-	    file.write(log_file, messagedata + "\n")
-	    time.sleep(0.1)
-	    os.system('clear')
+		#  Obtem cada informacao, realizando um split na json_data recebida
+		# topic, update_id, timeStamp, val, messagedata = json_data.split("#")
+		topic = json_data["topic"]
+		timeStamp = json_data["timestamp"]	
+		val = json_data["temp"]
+		sala = json_data["sala"]
+		if(cont<=10):
+			print("Entrou no cont<10")
+			meanTemp.append(float(val))
+			# Mostra as informacoes na tela e as escreve no log
+			print("Topic: " + str(topic))
+			print("Sala: " + str(sala))
+			print("Update ID: " + str(timeStamp))
+			print("Temp: " + str(val))
+			time.sleep(0.1)
+			os.system('clear')
+			cont = cont + 1
+		else:
+			print("Entrou no outro")
+			meanTemp.append(float(val))
+			meanTemp = meanTemp[1:]
+			# Mostra as informacoes na tela e as escreve no log
+			print("Topic: " + str(topic))
+			file.write(log_file, "Topic: " + str(topic) + "\n")
+			print("Sala: " + str(sala))
+			file.write(log_file, "Sala: " + str(sala) + "\n")
+			print("Update ID: " + str(timeStamp))
+			file.write(log_file, "Update ID: " + str(timeStamp) + "\n")
+			print("\nMedia de temp: " + str(mean(meanTemp)))
+			file.write(log_file, str(mean(meanTemp)) + "\n")
+			time.sleep(0.1)
+			os.system('clear')
+			cont = cont + 1
 
 	log_file.close()
 
 def main():
 
-	# Menu inicial
+# Menu inicial mostrando as salas e seus respectivos IDs
 	print("Opcao    Sala")
-	print('1		LE1')
-	print('2		LE2')
-	print('3		LE3')
-	print('4		LE4')
-	print('5		LE5')
-	print('6		LE6')
-	print('7		PPGCC1')
-	print('8		PPGCC2')
-	print('9		PPGCC3')
-	print('10		PPGCC4')
-	print('11		Auditorio')
-	print('12		Almoxarifado')
-	print('13		Sala de Banco de dados')
-	print('14		Secretaria')
-	print('15		Sala de reuniao')
-	
+	print('A: LE1')
+	print('B: LE2')
+	print('C: LE3')
+	print('D: LE4')
+	print('E: LE5')
+	print('F: LE6')
+	print('G: PPGCC1')
+	print('H: PPGCC2')
+	print('I: PPGCC3')
+	print('J: PPGCC4')
+
 	# Selecao de topico
-	topicfilter = input("Escolha a sala que deseja monitorar a temperatura: ")
+	topicfilter = raw_input("Escolha a sala de aula que deseja monitorar: ")
 
 	# Inicia um processo para o subscriber
 	process = Process(target=sub, args=(topicfilter,))
