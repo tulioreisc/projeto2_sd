@@ -44,7 +44,9 @@ def pub(topic):
 	port = "5559"
 	context = zmq.Context()
 	socket = context.socket(zmq.PUB)
-	socket.connect("tcp://localhost:%s" % port)
+	#socket.connect("tcp://localhost:%s" % port)
+	socket.connect("tcp://127.0.0.1:%s" % port)
+	#socket.connect('tcp://192.168.1.111:4507')
 
 	# Identificador das atualizacoes dos valores de temperatura.
 	# Utilizado para verificar se as temperaturas estao sendo atualizadas de forma igual em todos
