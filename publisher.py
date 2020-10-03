@@ -4,11 +4,11 @@
 
 #Para rodar o codigo eh necessario utilizar python 2
 
+from multiprocessing import Process
 import zmq
 import random
 import sys
 import time
-from multiprocessing import Process
 import datetime
 import json
 import pickle
@@ -53,6 +53,7 @@ def pub(topic):
 	# os subscribers.
 	room_update_id = 0
 
+	# Loop infinito
 	while True:
 		# Gera uma mensagem com a funcao mostrada acima para o topico especifico
 		message = set_message(topic)
@@ -69,6 +70,7 @@ def pub(topic):
 		room_update_id = room_update_id + 1
 		time.sleep(0.1)
 
+# Função principal
 def main():
 
 	# Cria um processo para tratar de sala de aula
